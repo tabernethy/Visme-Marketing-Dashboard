@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visme Weekly Marketing — W/E Mar 2, 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0d0f14;
+  --surf:     #13161e;
+  --surf2:    #191d28;
+  --border:   #1f2435;
+  --border2:  #262c3d;
+  --text:     #dde1ec;
+  --muted:    #4e5872;
+  --dim:      #2a3048;
+  --green:    #36d68a;
+  --red:      #f0506e;
+  --amber:    #f5a623;
+  --blue:     #4d9fff;
+  --purple:   #a855f7;
+  --teal:     #2dd4bf;
+  --font:     'IBM Plex Sans', sans-serif;
+  --mono:     'IBM Plex Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 14px; display: flex; flex-direction: column; }
+
+/* ── HEADER ── */
+.hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px; background: var(--surf); border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.hdr-left { display: flex; align-items: center; gap: 12px; }
+.hdr-logo { width: 30px; height: 30px; background: var(--green); border-radius: 7px;
+  font-weight: 700; font-size: 15px; color: #000; display: flex; align-items: center; justify-content: center; }
+.hdr-title { font-weight: 700; font-size: 15px; letter-spacing: 0.01em; }
+.hdr-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 1px; }
+.hdr-badge { font-family: var(--mono); font-size: 10px; font-weight: 500; background: var(--dim);
+  color: var(--green); border: 1px solid var(--border2); padding: 4px 12px; border-radius: 4px; letter-spacing: 0.08em; }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex; gap: 0; background: var(--surf); border-bottom: 1px solid var(--border);
+  padding: 0 24px; overflow-x: auto; flex-shrink: 0;
+}
+.tab-bar::-webkit-scrollbar { height: 0; }
+.tab-btn {
+  padding: 12px 18px; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--muted); border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;
+  transition: color .15s; font-family: var(--font); background: none; border-top: none; border-left: none; border-right: none;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+
+/* ── PANELS ── */
+.panels { flex: 1; overflow-y: auto; }
+.panel { display: none; padding: 24px; }
+.panel.active { display: block; }
+
+/* ── SECTION HEADER ── */
+.sec-hdr { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+.sec-title { font-size: 18px; font-weight: 700; }
+.sec-range { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+/* ── KPI STRIP ── */
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 24px; }
+.kpi-row-4 { grid-template-columns: repeat(4, 1fr); }
+.kpi {
+  background: var(--surf); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px 18px 14px; position: relative;
+}
+.kpi::after { content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: var(--kpi-color, var(--green)); border-radius: 10px 10px 0 0; }
+.kpi-lbl { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 8px; }
+.kpi-val { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+.kpi-yoy { font-family: var(--mono); font-size: 11px; display: flex; align-items: center; gap: 5px; }
+.up   { color: var(--green); }
+.down { color: var(--red); }
+.flat { color: var(--muted); }
+
+/* ── 2×2 GRID ── */
+.grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-2x1 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-1x1 { margin-bottom: 16px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--surf); border: 1px solid var(--border); border-radius: 10px;
+  padding: 20px 22px; margin-bottom: 16px;
+}
+.card:last-child { margin-bottom: 0; }
+.card-t { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+.card-s { font-family: var(--mono); font-size: 10px; color: var(--dim); margin-bottom: 16px; }
+
+/* ── CHART WRAPPER — key is fixed aspect ratio via padding trick ── */
+.chart-sq  { position: relative; width: 100%; padding-bottom: 75%; }  /* ~4:3 */
+.chart-sq canvas { position: absolute; top:0; left:0; width:100%!important; height:100%!important; }
+
+/* ── TABLE ── */
+table.dt { width:100%; border-collapse:collapse; font-family:var(--mono); font-size:11px; }
+table.dt th { text-align:left; padding:7px 10px; color:var(--muted); font-size:10px; letter-spacing:.08em; text-transform:uppercase; border-bottom:1px solid var(--border); font-weight:500; }
+table.dt td { padding:9px 10px; border-bottom:1px solid #151821; }
+table.dt tr:last-child td { border-bottom:none; }
+table.dt tr:hover td { background:#0f1219; }
+.bar-in { display:flex; align-items:center; gap:8px; }
+.minibar { height:5px; border-radius:3px; flex-shrink:0; }
+.chip { display:inline-block; font-family:var(--mono); font-size:10px; padding:2px 7px; border-radius:3px; }
+.chip.up   { background:rgba(54,214,138,.1);  color:var(--green); }
+.chip.down { background:rgba(240,80,110,.1);  color:var(--red);   }
+.chip.flat { background:rgba(78,88,114,.12);  color:var(--muted); }
+
+/* ── LEGEND ── */
+.legend { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:14px; }
+.leg-item { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11px; color:var(--muted); }
+.leg-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-logo">V</div>
+    <div>
+      <div class="hdr-title">Visme Weekly Marketing Report</div>
+      <div class="hdr-sub">Week ending March 2, 2026 &nbsp;·&nbsp; Last 12 weeks · Leadership view</div>
+    </div>
+  </div>
+  <div class="hdr-badge">W10 · 2026</div>
+</div>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="show('overview',this)">Overview</button>
+  <button class="tab-btn" onclick="show('traffic',this)">Traffic</button>
+  <button class="tab-btn" onclick="show('traffic-country',this)">Traffic by Country</button>
+  <button class="tab-btn" onclick="show('free-conv',this)">Free Conversions</button>
+  <button class="tab-btn" onclick="show('paid-conv',this)">Paid Conversions</button>
+  <button class="tab-btn" onclick="show('conv-country',this)">Conversions by Country</button>
+  <button class="tab-btn" onclick="show('ppc',this)">PPC</button>
+  <button class="tab-btn" onclick="show('yoy',this)">YoY Summary</button>
+</div>
+
+<div class="panels">
+
+<!-- ════════════════════════════════════════
+     1. OVERVIEW
+════════════════════════════════════════ -->
+<div class="panel active" id="panel-overview">
+  <div class="sec-hdr">
+    <div class="sec-title">Performance Overview</div>
+    <div class="sec-range">Dec 29, 2025 – Mar 2, 2026</div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi" style="--kpi-color:var(--green)">
+      <div class="kpi-lbl">New Users</div>
+      <div class="kpi-val">177,596</div>
+      <div class="kpi-yoy down">▼ 45.5% YoY</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--blue)">
+      <div class="kpi-lbl">Free Conversions</div>
+      <div class="kpi-val">53,519</div>
+      <div class="kpi-yoy down">▼ 38.5% YoY</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--teal)">
+      <div class="kpi-lbl">Traffic→Free CVR</div>
+      <div class="kpi-val">30.1%</div>
+      <div class="kpi-yoy down">▼ 20.6% YoY</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--purple)">
+      <div class="kpi-lbl">Paid Conversions</div>
+      <div class="kpi-val">271</div>
+      <div class="kpi-yoy up">▲ 0.7% YoY</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--amber)">
+      <div class="kpi-lbl">Weekly Revenue</div>
+      <div class="kpi-val">$136k</div>
+      <div class="kpi-yoy down">▼ 29.3% YoY</div>
+    </div>
+  </div>
+
+  <div class="grid-2x2">
+    <div class="card">
+      <div class="card-t">New Users — Weekly Trend</div>
+      <div class="card-s">Last 10 weeks · with YoY % overlay</div>
+      <div class="chart-sq"><canvas id="c-ov-traffic"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Free Conversions — Weekly Trend</div>
+      <div class="card-s">Last 10 weeks · with YoY % overlay</div>
+      <div class="chart-sq"><canvas id="c-ov-freeconv"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Revenue — Weekly Trend</div>
+      <div class="card-s">Last 10 weeks · with YoY % overlay</div>
+      <div class="chart-sq"><canvas id="c-ov-rev"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Paid Conversions — Weekly Trend</div>
+      <div class="card-s">Last 10 weeks · with YoY % overlay</div>
+      <div class="chart-sq"><canvas id="c-ov-paid"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     2. TRAFFIC
+════════════════════════════════════════ -->
+<div class="panel" id="panel-traffic">
+  <div class="sec-hdr">
+    <div class="sec-title">Traffic by Source</div>
+    <div class="sec-range">May 5 – Jul 21, 2025 · New Users</div>
+  </div>
+  <div class="grid-2x2">
+    <div class="card">
+      <div class="card-t">Weekly New Users by Source</div>
+      <div class="card-s">Stacked bars · last 12 weeks</div>
+      <div class="legend" id="ts-leg"></div>
+      <div class="chart-sq"><canvas id="c-ts-stacked"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Channel Share — Latest Week</div>
+      <div class="card-s">Jul 21, 2025 · % of total</div>
+      <div class="chart-sq"><canvas id="c-ts-donut"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Google Organic — Weekly Trend + YoY</div>
+      <div class="card-s">Dominant channel · last 12 weeks</div>
+      <div class="chart-sq"><canvas id="c-ts-google"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Total Traffic — Weekly Trend + YoY</div>
+      <div class="card-s">All channels combined · last 12 weeks</div>
+      <div class="chart-sq"><canvas id="c-ts-total"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     3. TRAFFIC BY COUNTRY
+════════════════════════════════════════ -->
+<div class="panel" id="panel-traffic-country">
+  <div class="sec-hdr">
+    <div class="sec-title">Traffic by Country</div>
+    <div class="sec-range">W/E Mar 2, 2026 · New Users</div>
+  </div>
+  <div class="grid-2x2">
+    <div class="card">
+      <div class="card-t">Top 10 Countries — New Users</div>
+      <div class="card-s">Latest week · ranked by volume</div>
+      <div class="chart-sq"><canvas id="c-tc-bar"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Geographic Mix — Latest Week</div>
+      <div class="card-s">% share by development group</div>
+      <div class="chart-sq"><canvas id="c-tc-donut"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">US vs Non-US Traffic — Weekly + YoY</div>
+      <div class="card-s">Dec 15, 2025 – Mar 2, 2026 · solid = current · dashed = prior year</div>
+      <div class="chart-sq"><canvas id="c-tc-us-nonus"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">US vs Non-US — YoY % Change</div>
+      <div class="card-s">Weekly % delta vs same week prior year</div>
+      <div class="chart-sq"><canvas id="c-tc-us-yoy"></canvas></div>
+    </div>
+    <div class="card" style="grid-column:span 2">
+      <div class="card-t">Top Countries — Detail Table</div>
+      <div class="card-s">Latest week · new users + development group</div>
+      <table class="dt" id="t-tc"></table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     4. FREE CONVERSIONS
+════════════════════════════════════════ -->
+<div class="panel" id="panel-free-conv">
+  <div class="sec-hdr">
+    <div class="sec-title">Free Conversions</div>
+    <div class="sec-range">Dec 29, 2025 – Mar 2, 2026</div>
+  </div>
+  <div class="kpi-row kpi-row-4">
+    <div class="kpi" style="--kpi-color:var(--blue)">
+      <div class="kpi-lbl">Free Conversions (latest)</div>
+      <div class="kpi-val">53,519</div>
+      <div class="kpi-yoy down">▼ 38.5% YoY</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--teal)">
+      <div class="kpi-lbl">Traffic→Free CVR</div>
+      <div class="kpi-val">30.1%</div>
+      <div class="kpi-yoy down">▼ 20.6% YoY</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--purple)">
+      <div class="kpi-lbl">Free→Paid CVR</div>
+      <div class="kpi-val">0.51%</div>
+      <div class="kpi-yoy up">▲ 5.4% YoY</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--amber)">
+      <div class="kpi-lbl">12-Week Avg Free Conv</div>
+      <div class="kpi-val">49,551</div>
+      <div class="kpi-yoy flat">— 10-wk window</div>
+    </div>
+  </div>
+  <div class="grid-2x2">
+    <div class="card">
+      <div class="card-t">Free Conversions — Weekly + YoY %</div>
+      <div class="card-s">Bars = volume · line = YoY change</div>
+      <div class="chart-sq"><canvas id="c-fc-main"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Traffic → Free CVR — Weekly + YoY %</div>
+      <div class="card-s">% of new users becoming free accounts</div>
+      <div class="chart-sq"><canvas id="c-fc-cvr"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Free → Paid CVR — Weekly + YoY %</div>
+      <div class="card-s">% of free users upgrading to paid</div>
+      <div class="chart-sq"><canvas id="c-fc-f2p"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Conversion Funnel — Latest Week</div>
+      <div class="card-s">Mar 2, 2026 · Traffic → Free → Paid</div>
+      <div class="chart-sq"><canvas id="c-fc-funnel"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     5. PAID CONVERSIONS
+════════════════════════════════════════ -->
+<div class="panel" id="panel-paid-conv">
+  <div class="sec-hdr">
+    <div class="sec-title">Paid Conversions by Plan</div>
+    <div class="sec-range">Dec 15, 2025 – Mar 2, 2026</div>
+  </div>
+  <div class="kpi-row kpi-row-4">
+    <div class="kpi" style="--kpi-color:var(--green)">
+      <div class="kpi-lbl">Total Paid (latest)</div>
+      <div class="kpi-val">271</div>
+      <div class="kpi-yoy up">▲ 0.7% YoY</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--blue)">
+      <div class="kpi-lbl">Starter (latest)</div>
+      <div class="kpi-val">150</div>
+      <div class="kpi-yoy flat">55% of mix</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--purple)">
+      <div class="kpi-lbl">Pro (latest)</div>
+      <div class="kpi-val">108</div>
+      <div class="kpi-yoy flat">40% of mix</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--amber)">
+      <div class="kpi-lbl">Education (latest)</div>
+      <div class="kpi-val">13</div>
+      <div class="kpi-yoy flat">5% of mix</div>
+    </div>
+  </div>
+  <div class="grid-2x2">
+    <div class="card">
+      <div class="card-t">Paid Conversions — Weekly by Plan</div>
+      <div class="card-s">Stacked · last 12 weeks</div>
+      <div class="chart-sq"><canvas id="c-pc-stacked"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Plan Mix — Latest 3-Week Avg</div>
+      <div class="card-s">Share of total paid conversions</div>
+      <div class="chart-sq"><canvas id="c-pc-donut"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Total Paid Conversions + YoY %</div>
+      <div class="card-s">Bars = volume · line = YoY change</div>
+      <div class="chart-sq"><canvas id="c-pc-yoy"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Starter vs Pro — Weekly Trend</div>
+      <div class="card-s">The two dominant plan types</div>
+      <div class="chart-sq"><canvas id="c-pc-s-vs-p"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     6. CONVERSIONS BY COUNTRY
+════════════════════════════════════════ -->
+<div class="panel" id="panel-conv-country">
+  <div class="sec-hdr">
+    <div class="sec-title">Conversions by Country</div>
+    <div class="sec-range">Dec 15, 2025 – Mar 2, 2026 · 12-week window</div>
+  </div>
+  <div class="grid-2x2">
+    <div class="card">
+      <div class="card-t">Top 10 Countries — 12-Week Total</div>
+      <div class="card-s">Paid conversions by country</div>
+      <div class="chart-sq"><canvas id="c-cc-bar"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Country Mix — 12-Week Share</div>
+      <div class="card-s">% of total paid conversions</div>
+      <div class="chart-sq"><canvas id="c-cc-donut"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Top 5 Countries — Weekly Trend</div>
+      <div class="card-s">Conversions over last 12 weeks</div>
+      <div class="chart-sq"><canvas id="c-cc-trend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Country Detail Table</div>
+      <div class="card-s">12-week total · latest week</div>
+      <table class="dt" id="t-cc"></table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     7. PPC
+════════════════════════════════════════ -->
+<div class="panel" id="panel-ppc">
+  <div class="sec-hdr">
+    <div class="sec-title">Paid Search &amp; Social</div>
+    <div class="sec-range">Dec 8, 2025 – Mar 8, 2026</div>
+  </div>
+  <div class="kpi-row kpi-row-4">
+    <div class="kpi" style="--kpi-color:var(--green)">
+      <div class="kpi-lbl">Google Spend (W/E Mar 2)</div>
+      <div class="kpi-val">$6,814</div>
+      <div class="kpi-yoy flat">28 conversions</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--blue)">
+      <div class="kpi-lbl">Google CPA</div>
+      <div class="kpi-val">$244</div>
+      <div class="kpi-yoy flat">per conversion</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--amber)">
+      <div class="kpi-lbl">Bing Spend (W/E Mar 8)</div>
+      <div class="kpi-val">$1,357</div>
+      <div class="kpi-yoy flat">5 conversions</div>
+    </div>
+    <div class="kpi" style="--kpi-color:var(--purple)">
+      <div class="kpi-lbl">Total PPC Spend</div>
+      <div class="kpi-val">$8,171</div>
+      <div class="kpi-yoy flat">Google + Bing</div>
+    </div>
+  </div>
+  <div class="grid-2x2">
+    <div class="card">
+      <div class="card-t">Google Ads — Weekly Spend</div>
+      <div class="card-s">Last 12 weeks</div>
+      <div class="chart-sq"><canvas id="c-ppc-ga-spend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Google Ads — Conversions &amp; CPA</div>
+      <div class="card-s">Bars = conversions · line = CPA ($)</div>
+      <div class="chart-sq"><canvas id="c-ppc-ga-conv"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Bing Ads — Spend &amp; Conversions</div>
+      <div class="card-s">Last 12 weeks</div>
+      <div class="chart-sq"><canvas id="c-ppc-bing"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Facebook — Spend &amp; Signups</div>
+      <div class="card-s">Feb–Apr 2025 available data</div>
+      <div class="chart-sq"><canvas id="c-ppc-fb"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     8. YOY SUMMARY
+════════════════════════════════════════ -->
+<div class="panel" id="panel-yoy">
+  <div class="sec-hdr">
+    <div class="sec-title">Year-over-Year Summary</div>
+    <div class="sec-range">Dec 29, 2025 – Mar 2, 2026 vs same period prior year</div>
+  </div>
+  <div class="grid-2x2">
+    <div class="card">
+      <div class="card-t">Traffic YoY % — Weekly</div>
+      <div class="card-s">New users vs same week prior year</div>
+      <div class="chart-sq"><canvas id="c-yoy-traffic"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Free Conversions YoY % — Weekly</div>
+      <div class="card-s">Free sign-ups vs same week prior year</div>
+      <div class="chart-sq"><canvas id="c-yoy-freeconv"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Revenue YoY % — Weekly</div>
+      <div class="card-s">Revenue vs same week prior year</div>
+      <div class="chart-sq"><canvas id="c-yoy-rev"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-t">All Metrics — YoY Summary Table</div>
+      <div class="card-s">Latest week · absolute + YoY delta</div>
+      <table class="dt" id="t-yoy"></table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /panels -->
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════ */
+const WK = ['Dec 29','Jan 5','Jan 12','Jan 19','Jan 26','Feb 2','Feb 9','Feb 16','Feb 23','Mar 2'];
+
+const D = {
+  traffic:     [131031,151000,171286,179626,186011,193228,176448,173767,185781,177596],
+  trafficYoY:  [-40.0,-48.4,-46.8,-44.4,-42.6,-43.0,-47.9,-49.3,-44.9,-45.5],
+  freeConv:    [29802,42064,45695,48793,50404,52123,50832,51487,55996,53519],
+  freeConvYoY: [-38.0,-22.3,-23.8,-19.3,-20.6,-32.0,-26.5,-26.3,-33.8,-38.5],
+  cvr:         [22.7,27.9,26.7,27.2,27.1,27.0,28.8,29.6,30.1,30.1],
+  cvrYoY:      [-30.0,-15.8,-20.9,-19.6,-21.2,-24.8,-19.8,-19.1,-19.4,-20.6],
+  paidConv:    [97,161,195,184,213,225,262,263,269,271],
+  paidConvYoY: [-11.0,66.0,21.1,-5.6,15.8,5.6,16.4,0.4,2.3,0.7],
+  revenue:     [96171,158753,152596,161241,128495,145826,150031,169392,160158,136218],
+  revYoY:      [-49.6,-10.7,-26.7,-16.8,-45.0,-25.0,-29.4,-15.4,-31.6,-29.3],
+  f2p:         [0.326,0.383,0.427,0.377,0.423,0.432,0.515,0.511,0.480,0.506],
+  f2pYoY:      [-4.8,17.6,11.5,-11.6,12.1,2.2,19.4,-0.9,-6.0,5.4],
+};
+
+// Plan conversions — last 12 weeks (Dec 15 – Mar 2)
+const PK = ['Dec 15','Dec 22','Dec 29','Jan 5','Jan 12','Jan 19','Jan 26','Feb 2','Feb 9','Feb 16','Feb 23','Mar 2'];
+const PLANS = {
+  Starter:    [87,56,57,81,107,104,117,98,112,115,131,150],
+  Pro:        [53,46,36,76,76,71,85,113,120,127,123,108],
+  Education:  [14,6,4,3,12,9,10,14,30,21,14,13],
+  Enterprise: [0,1,0,0,0,0,1,0,0,0,1,0],
+};
+const PLAN_COLORS = ['#36d68a','#4d9fff','#f5a623','#a855f7'];
+
+// Traffic sources — last 12 weeks (May 5 – Jul 21 2025)
+const TSW = ['May 5','May 12','May 19','May 26','Jun 2','Jun 9','Jun 16','Jun 23','Jun 30','Jul 7','Jul 14','Jul 21'];
+const TS = {
+  'Google Organic': [185738,192163,189090,177970,162870,151647,145195,142144,130709,129388,122788,126683],
+  'Direct':         [40929,41229,39926,37405,36360,34871,32437,31524,30491,31508,30516,31754],
+  'ChatGPT/AI':     [15194,13729,13087,12806,11240,9879,10019,9416,9108,9570,9350,9428],
+  'Yandex':         [14454,19799,16802,13600,13667,9452,7618,7488,5607,5664,5547,4837],
+  'Google Paid':    [12677,7175,1553,1499,1743,3670,4274,1758,1619,1955,1494,1254],
+  'Bing Organic':   [10736,10759,11200,10366,10550,9774,9021,8112,7600,7907,8020,7726],
+  'Email':          [4707,3615,2818,2227,2117,1791,1842,3071,979,1021,1730,1795],
+};
+const TS_COLORS = ['#36d68a','#4d9fff','#2dd4bf','#f0506e','#a855f7','#f5a623','#fb7185'];
+
+// Traffic by country — latest week (Mar 2 2026)
+const TC = [
+  {country:'United States', group:'US + Canada',   continent:'N. America', users:28434},
+  {country:'India',         group:'Other',         continent:'Asia',       users:20360},
+  {country:'Russia',        group:'Other',         continent:'Europe',     users:18115},
+  {country:'Brazil',        group:'Other',         continent:'S. America', users:7745},
+  {country:'Philippines',   group:'Other',         continent:'Asia',       users:2542},
+  {country:'United Kingdom',group:'Developed',     continent:'Europe',     users:2100},
+  {country:'Mexico',        group:'Other',         continent:'N. America', users:1900},
+  {country:'Germany',       group:'Developed',     continent:'Europe',     users:1750},
+  {country:'France',        group:'Developed',     continent:'Europe',     users:1600},
+  {country:'Indonesia',     group:'Other',         continent:'Asia',       users:1400},
+];
+
+// Conversions by country — last 12 weeks
+const CC = {
+  US: [70,38,45,68,82,87,109,110,139,140,150,117],
+  CA: [6,7,0,11,12,12,7,15,19,14,8,18],
+  GB: [6,4,3,9,11,10,10,10,11,7,14,6],
+  FR: [4,4,3,4,2,4,10,9,3,9,11,12],
+  MX: [6,2,2,4,5,4,4,8,8,6,4,7],
+  DE: [2,0,1,4,2,2,5,6,4,5,11,17],
+  BR: [3,5,2,7,8,3,7,7,6,2,4,1],
+  AU: [0,1,4,1,3,4,5,6,10,9,6,5],
+  IN: [4,3,3,3,7,4,2,6,2,5,2,5],
+  SA: [7,9,5,6,2,1,1,4,4,2,1,0],
+};
+
+// PPC
+const GAW  = ['Dec 15','Dec 22','Dec 29','Jan 5','Jan 12','Jan 19','Jan 26','Feb 2','Feb 9','Feb 16','Feb 23','Mar 2'];
+const GA_SPEND = [5610,3195,2013,2464,3449,5489,6655,5488,6141,6628,6814,6814];
+const GA_CONV  = [44,2,2,9,7,15,15,19,25,17,28,28];
+const GA_CPA   = GA_SPEND.map((s,i)=>GA_CONV[i]>0?Math.round(s/GA_CONV[i]):null);
+
+const BINGW = ['Dec 15','Dec 22','Dec 29','Jan 5','Jan 12','Jan 19','Jan 26','Feb 2','Feb 9','Feb 16','Feb 23','Mar 8'];
+const BING_SPEND = [654,346,210,215,246,887,920,777,1211,1229,1122,1357];
+const BING_CONV  = [2,0,0,0,3,4,2,8,5,5,9,5];
+
+const FBW = ['Feb 1','Feb 8','Feb 15','Feb 22','Mar 1','Mar 8','Mar 15','Mar 22','Mar 29','Apr 5','Apr 12','Apr 19'];
+const FB_SPEND   = [328,797,701,739,855,1054,488,351,348,352,349,361];
+const FB_SIGNUPS = [373,739,878,1090,971,848,146,11,13,15,13,22];
+
+/* ═══════════════════════════════════════════
+   CHART HELPERS
+═══════════════════════════════════════════ */
+Chart.defaults.color = '#4e5872';
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size = 10;
+
+const G = { color:'#1a1f2e', drawBorder:false };
+const T = { color:'#3a4255', maxRotation:0, maxTicksLimit:7 };
+
+const ALPHA = c => c+'99';
+
+function line(c, fill=false) {
+  return { borderColor:c, backgroundColor: fill ? c+'20':'transparent',
+    fill, tension:0.35, borderWidth:2, pointRadius:2, pointHoverRadius:5,
+    pointBackgroundColor:c };
+}
+function bar(c) {
+  return { backgroundColor:ALPHA(c), borderColor:c, borderWidth:1,
+    borderRadius:4, borderSkipped:false };
+}
+
+// dual-axis: bars left, line right
+function dualChart(id, labels, barData, barLabel, barColor, lineData, lineLabel, lineColor, barFmt, lineFmt) {
+  return new Chart(document.getElementById(id), {
+    data: {
+      labels,
+      datasets: [
+        { type:'bar',  label:barLabel,  data:barData,  ...bar(barColor),   yAxisID:'y'  },
+        { type:'line', label:lineLabel, data:lineData, ...line(lineColor), yAxisID:'y2', fill:false },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:'#4e5872', boxWidth:8, padding:12, font:{size:10} }}},
+      scales:{
+        x:{ grid:G, ticks:T },
+        y:{ grid:G, ticks:{ ...T, callback:v=>barFmt(v) }},
+        y2:{ position:'right', grid:{display:false}, ticks:{ ...T, callback:v=>lineFmt(v) }},
+      }
+    }
+  });
+}
+
+function lineChart(id, labels, datasets) {
+  return new Chart(document.getElementById(id), {
+    type:'line', data:{ labels, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ color:'#4e5872', boxWidth:8, padding:12, font:{size:10} }}},
+      scales:{ x:{ grid:G, ticks:T }, y:{ grid:G, ticks:T }}
+    }
+  });
+}
+
+function donut(id, labels, data, colors) {
+  return new Chart(document.getElementById(id), {
+    type:'doughnut', data:{ labels, datasets:[{ data, backgroundColor:colors.map(ALPHA), borderColor:colors, borderWidth:2 }]},
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'58%',
+      plugins:{ legend:{ position:'right', labels:{ color:'#4e5872', boxWidth:10, padding:10, font:{size:10} }}}
+    }
+  });
+}
+
+function hbar(id, labels, data, color) {
+  return new Chart(document.getElementById(id), {
+    type:'bar', data:{ labels, datasets:[{ label:'', data, ...bar(color) }]},
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{ legend:{display:false} },
+      scales:{ x:{ grid:G, ticks:T }, y:{ grid:G, ticks:{ ...T, maxRotation:0 }}}
+    }
+  });
+}
+
+function yoyLineChart(id, labels, data, color, label) {
+  return new Chart(document.getElementById(id), {
+    type:'line', data:{ labels, datasets:[{ label, data, ...line(color, true) }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false},
+        annotation:{ annotations:{ zero:{ type:'line', yMin:0, yMax:0, borderColor:'#2a3048', borderWidth:1 }}}},
+      scales:{
+        x:{ grid:G, ticks:T },
+        y:{ grid:G, ticks:{ ...T, callback:v=>v+'%' }}
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════
+   BUILD CHARTS
+═══════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+
+/* ── 1. OVERVIEW ── */
+dualChart('c-ov-traffic', WK,
+  D.traffic, 'New Users', '#36d68a',
+  D.trafficYoY, 'YoY %', '#f0506e',
+  v=>(v/1000).toFixed(0)+'k', v=>v+'%');
+
+dualChart('c-ov-freeconv', WK,
+  D.freeConv, 'Free Conv', '#4d9fff',
+  D.freeConvYoY, 'YoY %', '#f0506e',
+  v=>(v/1000).toFixed(0)+'k', v=>v+'%');
+
+dualChart('c-ov-rev', WK,
+  D.revenue, 'Revenue ($)', '#f5a623',
+  D.revYoY, 'YoY %', '#f0506e',
+  v=>'$'+(v/1000).toFixed(0)+'k', v=>v+'%');
+
+dualChart('c-ov-paid', WK,
+  D.paidConv, 'Paid Conv', '#a855f7',
+  D.paidConvYoY, 'YoY %', '#2dd4bf',
+  v=>v, v=>v+'%');
+
+/* ── 2. TRAFFIC ── */
+const tsKeys = Object.keys(TS);
+new Chart(document.getElementById('c-ts-stacked'), {
+  type:'bar',
+  data:{ labels:TSW, datasets: tsKeys.map((k,i)=>({ label:k, data:TS[k], ...bar(TS_COLORS[i]) }))},
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ stacked:true, grid:G, ticks:T },
+      y:{ stacked:true, grid:G, ticks:{ ...T, callback:v=>(v/1000).toFixed(0)+'k' }}
+    }
+  }
+});
+
+// Build legend
+const leg = document.getElementById('ts-leg');
+tsKeys.forEach((k,i) => {
+  const el = document.createElement('div'); el.className='leg-item';
+  el.innerHTML=`<div class="leg-dot" style="background:${TS_COLORS[i]}"></div>${k}`;
+  leg.appendChild(el);
+});
+
+donut('c-ts-donut', tsKeys, tsKeys.map(k=>TS[k][11]), TS_COLORS);
+
+dualChart('c-ts-google', TSW,
+  TS['Google Organic'], 'Google Organic', '#36d68a',
+  TS['Google Organic'].map((v,i) => {
+    const prev = TS['Google Organic'][i-1];
+    return i===0 ? null : +(((v-prev)/prev)*100).toFixed(1);
+  }), 'WoW %', '#f5a623',
+  v=>(v/1000).toFixed(0)+'k', v=>v+'%');
+
+const totals = TSW.map((_,i)=>tsKeys.reduce((s,k)=>s+TS[k][i],0));
+dualChart('c-ts-total', TSW,
+  totals, 'Total Users', '#4d9fff',
+  totals.map((v,i) => {
+    const prev = totals[i-1];
+    return i===0 ? null : +(((v-prev)/prev)*100).toFixed(1);
+  }), 'WoW %', '#f5a623',
+  v=>(v/1000).toFixed(0)+'k', v=>v+'%');
+
+/* ── 3. TRAFFIC BY COUNTRY ── */
+hbar('c-tc-bar', TC.map(r=>r.country), TC.map(r=>r.users), '#4d9fff');
+
+const grpMap = {};
+TC.forEach(r=>{ grpMap[r.group] = (grpMap[r.group]||0) + r.users; });
+const grpKeys = Object.keys(grpMap);
+donut('c-tc-donut', grpKeys, grpKeys.map(k=>grpMap[k]), ['#36d68a','#4d9fff','#f5a623','#a855f7','#f0506e']);
+
+const maxTC = TC[0].users;
+const tcTable = document.getElementById('t-tc');
+tcTable.innerHTML=`<tr><th>#</th><th>Country</th><th>Group</th><th>Continent</th><th>New Users</th><th>Share</th></tr>`;
+const tcTotal = TC.reduce((s,r)=>s+r.users,0);
+TC.forEach((r,i)=>{
+  const share = ((r.users/tcTotal)*100).toFixed(1);
+  tcTable.innerHTML+=`<tr>
+    <td style="color:var(--muted)">${i+1}</td>
+    <td><strong>${r.country}</strong></td>
+    <td style="color:var(--muted)">${r.group}</td>
+    <td style="color:var(--muted)">${r.continent}</td>
+    <td><div class="bar-in"><span style="color:var(--blue)">${r.users.toLocaleString()}</span>
+      <div class="minibar" style="width:${Math.round(r.users/maxTC*100)}px;background:var(--blue);opacity:.5"></div></div></td>
+    <td style="color:var(--muted)">${share}%</td>
+  </tr>`;
+});
+
+// US vs Non-US — current year vs prior year
+const TC_WK = ['Dec 15','Dec 22','Dec 29','Jan 5','Jan 12','Jan 19','Jan 26','Feb 2','Feb 9','Feb 16','Feb 23','Mar 2'];
+const US_CUR    = [24570,16325,15182,23519,26208,26662,26942,29395,28198,27269,28434,27551];
+const US_PREV   = [28305,19197,23091,33854,36829,35657,37959,38951,38390,37083,40238,39070];
+const NONUS_CUR  = [142337,108851,115849,127481,145078,152964,159069,163833,148250,146498,157347,150045];
+const NONUS_PREV = [265896,216789,195305,258811,285026,287604,286060,299778,300490,305732,296778,286630];
+const US_YOY    = [-13.2,-15.0,-34.3,-30.5,-28.8,-25.2,-29.0,-24.5,-26.5,-26.5,-29.3,-29.5];
+const NONUS_YOY = [-46.5,-49.8,-40.7,-50.7,-49.1,-46.8,-44.4,-45.3,-50.7,-52.1,-47.0,-47.7];
+
+new Chart(document.getElementById('c-tc-us-nonus'), {
+  type: 'line',
+  data: {
+    labels: TC_WK,
+    datasets: [
+      { label:'US (current yr)',   data:US_CUR,    borderColor:'#36d68a', backgroundColor:'transparent',
+        borderWidth:2, tension:0.35, pointRadius:2, pointBackgroundColor:'#36d68a', fill:false },
+      { label:'US (prior yr)',     data:US_PREV,   borderColor:'#36d68a', backgroundColor:'transparent',
+        borderDash:[4,3], borderWidth:1.5, tension:0.35, pointRadius:0, fill:false },
+      { label:'Non-US (current yr)', data:NONUS_CUR, borderColor:'#4d9fff', backgroundColor:'transparent',
+        borderWidth:2, tension:0.35, pointRadius:2, pointBackgroundColor:'#4d9fff', fill:false },
+      { label:'Non-US (prior yr)', data:NONUS_PREV, borderColor:'#4d9fff', backgroundColor:'transparent',
+        borderDash:[4,3], borderWidth:1.5, tension:0.35, pointRadius:0, fill:false },
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ labels:{ color:'#4e5872', boxWidth:10, padding:10, font:{size:10} }}},
+    scales:{
+      x:{ grid:G, ticks:T },
+      y:{ grid:G, ticks:{ ...T, callback:v=>(v/1000).toFixed(0)+'k' }}
+    }
+  }
+});
+
+new Chart(document.getElementById('c-tc-us-yoy'), {
+  type:'line',
+  data:{
+    labels:TC_WK,
+    datasets:[
+      { label:'US YoY %',     data:US_YOY,    borderColor:'#36d68a', backgroundColor:'#36d68a18',
+        fill:true, tension:0.35, borderWidth:2, pointRadius:2, pointBackgroundColor:'#36d68a' },
+      { label:'Non-US YoY %', data:NONUS_YOY, borderColor:'#4d9fff', backgroundColor:'#4d9fff18',
+        fill:true, tension:0.35, borderWidth:2, pointRadius:2, pointBackgroundColor:'#4d9fff' },
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ labels:{ color:'#4e5872', boxWidth:10, padding:10, font:{size:10} }}},
+    scales:{
+      x:{ grid:G, ticks:T },
+      y:{ grid:G, ticks:{ ...T, callback:v=>v+'%' }, suggestedMin:-60, suggestedMax:5 }
+    }
+  }
+});
+
+/* ── 4. FREE CONVERSIONS ── */
+dualChart('c-fc-main', WK,
+  D.freeConv, 'Free Conv', '#4d9fff',
+  D.freeConvYoY, 'YoY %', '#f0506e',
+  v=>(v/1000).toFixed(0)+'k', v=>v+'%');
+
+dualChart('c-fc-cvr', WK,
+  D.cvr, 'Traffic→Free CVR %', '#2dd4bf',
+  D.cvrYoY, 'YoY %', '#f0506e',
+  v=>v+'%', v=>v+'%');
+
+dualChart('c-fc-f2p', WK,
+  D.f2p, 'Free→Paid CVR %', '#a855f7',
+  D.f2pYoY, 'YoY %', '#f5a623',
+  v=>v+'%', v=>v+'%');
+
+// Funnel chart (latest week)
+new Chart(document.getElementById('c-fc-funnel'), {
+  type:'bar',
+  data:{
+    labels:['New Users','Free Conversions','Paid Conversions'],
+    datasets:[{
+      label:'Mar 2, 2026',
+      data:[177596,53519,271],
+      backgroundColor:['#36d68a88','#4d9fff88','#a855f788'],
+      borderColor:['#36d68a','#4d9fff','#a855f7'],
+      borderWidth:2, borderRadius:6, borderSkipped:false,
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{ callbacks:{ label:ctx=>{
+        const v=ctx.raw;
+        if(ctx.dataIndex===1) return [`${v.toLocaleString()}`, `CVR: ${((v/177596)*100).toFixed(1)}% of traffic`];
+        if(ctx.dataIndex===2) return [`${v.toLocaleString()}`, `CVR: ${((v/53519)*100).toFixed(2)}% of free`];
+        return v.toLocaleString();
+      }}}
+    },
+    scales:{
+      x:{grid:G,ticks:T},
+      y:{grid:G,ticks:{...T,callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v}}
+    }
+  }
+});
+
+/* ── 5. PAID CONVERSIONS ── */
+new Chart(document.getElementById('c-pc-stacked'), {
+  type:'bar',
+  data:{ labels:PK, datasets: Object.keys(PLANS).map((k,i)=>({ label:k, data:PLANS[k], ...bar(PLAN_COLORS[i]) }))},
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ labels:{ color:'#4e5872', boxWidth:8, padding:12, font:{size:10} }}},
+    scales:{
+      x:{ stacked:true, grid:G, ticks:T },
+      y:{ stacked:true, grid:G, ticks:T }
+    }
+  }
+});
+
+const planAvg = Object.keys(PLANS).map(k=>Math.round(PLANS[k].slice(-3).reduce((a,b)=>a+b,0)/3));
+donut('c-pc-donut', Object.keys(PLANS), planAvg, PLAN_COLORS);
+
+const totalPaid = PK.map((_,i)=>Object.keys(PLANS).reduce((s,k)=>s+(PLANS[k][i]||0),0));
+// YoY for total paid — approximate using overview data aligned to last 10 of 12 weeks
+const paidYoYFull = [null,null,...D.paidConvYoY];
+dualChart('c-pc-yoy', PK,
+  totalPaid, 'Total Paid Conv', '#36d68a',
+  paidYoYFull, 'YoY %', '#2dd4bf',
+  v=>v, v=>v!=null?v+'%':'');
+
+lineChart('c-pc-s-vs-p', PK, [
+  { label:'Starter', data:PLANS.Starter, ...line('#36d68a') },
+  { label:'Pro',     data:PLANS.Pro,     ...line('#4d9fff') },
+]);
+
+/* ── 6. CONVERSIONS BY COUNTRY ── */
+const ccKeys = Object.keys(CC);
+const ccTotals = ccKeys.map(k=>CC[k].reduce((a,b)=>a+b,0));
+const ccLatest = ccKeys.map(k=>CC[k][11]);
+
+hbar('c-cc-bar', ccKeys, ccTotals, '#4d9fff');
+
+donut('c-cc-donut', ccKeys, ccTotals, TS_COLORS);
+
+lineChart('c-cc-trend', PK, ['US','CA','GB','FR','DE'].map((k,i)=>({
+  label:k, data:CC[k], ...line(TS_COLORS[i])
+})));
+
+// Country table
+const maxCC = Math.max(...ccTotals);
+const ccTable = document.getElementById('t-cc');
+ccTable.innerHTML=`<tr><th>Country</th><th>12wk Total</th><th>Latest Wk</th><th>Trend</th></tr>`;
+ccKeys.forEach((k,i)=>{
+  const trend = ccLatest[i] > CC[k][9] ? 'up' : ccLatest[i] < CC[k][9] ? 'down' : 'flat';
+  const arrow = trend==='up'?'▲':trend==='down'?'▼':'–';
+  ccTable.innerHTML+=`<tr>
+    <td><strong style="color:var(--blue)">${k}</strong></td>
+    <td><div class="bar-in">${ccTotals[i]}
+      <div class="minibar" style="width:${Math.round(ccTotals[i]/maxCC*80)}px;background:var(--blue);opacity:.4"></div>
+    </div></td>
+    <td>${ccLatest[i]}</td>
+    <td><span class="chip ${trend}">${arrow} ${ccLatest[i]}</span></td>
+  </tr>`;
+});
+
+/* ── 7. PPC ── */
+new Chart(document.getElementById('c-ppc-ga-spend'), {
+  type:'bar',
+  data:{ labels:GAW, datasets:[{ label:'Spend ($)', data:GA_SPEND, ...bar('#36d68a') }]},
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false} },
+    scales:{ x:{grid:G,ticks:T}, y:{grid:G,ticks:{...T,callback:v=>'$'+(v/1000).toFixed(1)+'k'}}}
+  }
+});
+
+dualChart('c-ppc-ga-conv', GAW,
+  GA_CONV, 'Conversions', '#a855f7',
+  GA_CPA, 'CPA ($)', '#f5a623',
+  v=>v, v=>v!=null?'$'+v:'');
+
+dualChart('c-ppc-bing', BINGW,
+  BING_SPEND, 'Spend ($)', '#4d9fff',
+  BING_CONV, 'Conversions', '#2dd4bf',
+  v=>'$'+(v/1000).toFixed(1)+'k', v=>v);
+
+dualChart('c-ppc-fb', FBW,
+  FB_SPEND, 'Spend ($)', '#f5a623',
+  FB_SIGNUPS, 'Signups', '#2dd4bf',
+  v=>'$'+v, v=>v);
+
+/* ── 8. YOY SUMMARY ── */
+yoyLineChart('c-yoy-traffic',  WK, D.trafficYoY,  '#36d68a', 'New Users YoY %');
+yoyLineChart('c-yoy-freeconv', WK, D.freeConvYoY, '#4d9fff', 'Free Conv YoY %');
+yoyLineChart('c-yoy-rev',      WK, D.revYoY,      '#f5a623', 'Revenue YoY %');
+
+const YOY_ROWS = [
+  ['New Users',        '177,596', D.trafficYoY[9]],
+  ['Free Conversions', '53,519',  D.freeConvYoY[9]],
+  ['Traffic→Free CVR', '30.1%',   D.cvrYoY[9]],
+  ['Free→Paid CVR',    '0.51%',   D.f2pYoY[9]],
+  ['Paid Conversions', '271',     D.paidConvYoY[9]],
+  ['Revenue',          '$136,218',D.revYoY[9]],
+];
+const yoyT = document.getElementById('t-yoy');
+yoyT.innerHTML=`<tr><th>Metric</th><th>Latest Week</th><th>YoY Δ</th><th>vs Prior</th></tr>`;
+YOY_ROWS.forEach(([m,v,yoy])=>{
+  const cls = yoy>0?'up':yoy<0?'down':'flat';
+  const arrow = yoy>0?'▲':yoy<0?'▼':'–';
+  yoyT.innerHTML+=`<tr>
+    <td>${m}</td>
+    <td style="font-family:var(--mono)">${v}</td>
+    <td><span class="chip ${cls}">${arrow} ${Math.abs(yoy).toFixed(1)}%</span></td>
+    <td style="color:var(--muted);font-size:10px">${yoy>2?'Improving':yoy<-10?'Significant decline':yoy<0?'Slight decline':'Stable'}</td>
+  </tr>`;
+});
+
+}); // end DOMContentLoaded
+
+/* ═══════════════════════════════════════════
+   TAB SWITCHING
+═══════════════════════════════════════════ */
+function show(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
